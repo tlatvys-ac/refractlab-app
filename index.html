@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RefractLab — glass for After Effects</title>
+<link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+<link rel="icon" type="image/png" sizes="64x64" href="images/favicon.png">
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+<meta name="description" content="RefractLab is a free After Effects effect that turns shape layers into glass: Liquid Glass, frosted glass, and textured glass that refracts every layer below it.">
+<style>
+    :root {
+        --bg: #1E2024;
+        --surface: #2A2D33;
+        --border: #4A4D54;
+        --text: #DDD;
+        --text-strong: #FFF;
+        --muted: #8A8F98;
+        --accent: #4DA6FF;
+        --gold: #FFC53D;
+    }
+    * { box-sizing: border-box; }
+    body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: -apple-system, "SF Pro Text", "Helvetica Neue", "Segoe UI", sans-serif;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+    }
+    .wrap {
+        max-width: 660px;
+        margin: 0 auto;
+        padding: 56px 24px 80px;
+    }
+    .hero {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 14px;
+        margin-bottom: 44px;
+    }
+    .mark { width: 120px; height: 120px; }
+    h1 {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: 0.3em;
+        color: var(--text-strong);
+    }
+    .tagline { margin: 0; color: var(--muted); font-size: 15px; max-width: 460px; }
+
+    .buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+        margin-top: 10px;
+    }
+    .btn {
+        display: inline-block;
+        background: var(--surface);
+        border: 1px solid var(--accent);
+        border-radius: 6px;
+        color: var(--text-strong);
+        font-size: 14px;
+        font-weight: 700;
+        padding: 10px 22px;
+        text-decoration: none;
+        transition: border-color 120ms, background-color 120ms;
+        white-space: nowrap;
+    }
+    .btn:hover { border-color: #FFF; }
+    .btn:active { background: rgba(77, 166, 255, 0.15); }
+    .btn small { display: block; font-weight: 500; font-size: 11px; color: var(--muted); }
+    .soon { margin: 2px 0 0; color: var(--muted); font-size: 12px; }
+
+    section { margin-top: 40px; }
+    .divider {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 14px;
+    }
+    .divider::before, .divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+    }
+    .divider span {
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--muted);
+    }
+    h3 {
+        margin: 18px 0 6px;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--text-strong);
+    }
+    ol { margin: 0; padding-left: 22px; }
+    li { margin-bottom: 10px; }
+    li::marker { color: var(--accent); font-weight: 700; }
+    a { color: var(--accent); }
+    .fine { color: var(--muted); font-size: 12px; }
+    code {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        padding: 1px 6px;
+        font-size: 12px;
+    }
+    .features { margin: 0; padding-left: 22px; }
+    .features li { margin-bottom: 8px; font-size: 18px; font-weight: 600; color: var(--text-strong); }
+
+    /* Renders break out of the text column, like the other pages. */
+    .shots {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        width: min(1080px, calc(100vw - 48px));
+        margin-left: 50%;
+        transform: translateX(-50%);
+    }
+    .shots.three { grid-template-columns: repeat(3, 1fr); }
+    .shots figure { margin: 0; }
+    .shots img {
+        display: block;
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        cursor: zoom-in;
+        transition: border-color 120ms;
+    }
+    .shots img:hover { border-color: var(--accent); }
+    .shots figcaption {
+        margin-top: 6px;
+        font-size: 11px;
+        color: var(--muted);
+        text-align: center;
+    }
+    .lightbox {
+        position: fixed;
+        inset: 0;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        background: rgba(10, 11, 13, 0.9);
+        z-index: 100;
+        cursor: zoom-out;
+        padding: 24px;
+    }
+    .lightbox.open { display: flex; }
+    .lightbox img {
+        max-width: 96vw;
+        max-height: 92vh;
+        width: auto;
+        height: auto;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
+    }
+    footer {
+        margin-top: 56px;
+        text-align: center;
+        color: var(--muted);
+        font-size: 12px;
+    }
+    @media (max-width: 620px) {
+        .shots, .shots.three { grid-template-columns: 1fr; }
+    }
+</style>
+</head>
+<body>
+<div class="wrap">
+    <div class="hero">
+        <img class="mark" src="images/logo.svg" alt="">
+        <h1>REFRACTLAB</h1>
+        <p class="tagline">Turn your shape layers into glass inside After Effects</p>
+        <div class="buttons">
+            <a class="btn" id="dl-mac" href="https://github.com/tlatvys-ac/refractlab-app/releases/latest/download/RefractLab-0.1.6-mac.pkg">
+                Download for macOS
+                <small>Installer (.pkg) · Apple Silicon &amp; Intel · free</small>
+            </a>
+        </div>
+        <p class="soon">Windows isn't available yet.</p>
+    </div>
+
+    <section>
+        <div class="divider"><span>About</span></div>
+        <p>RefractLab turns a shape layer into a pane of glass. Apply the
+        RefractLab effect to a shape layer and everything below it bends
+        through the glass: no precomps, no background layer to set up. Go
+        for Apple-style Liquid Glass, frosted glass, or textured glass,
+        and animate the shape any way you like.</p>
+    </section>
+
+    <section>
+        <div class="divider"><span>What it looks like</span></div>
+        <div class="shots">
+            <figure>
+                <img src="images/liquid.png" alt="A pill, a rounded square, a circle and a tall card of clear glass over orange and violet gradients with diagonal stripes and bold discs; the stripes and discs bend at the glass's rounded edges" loading="lazy">
+                <figcaption>Liquid Glass: rounded edges that lens what's behind them</figcaption>
+            </figure>
+            <figure>
+                <img src="images/frosted.png" alt="The same four shapes as frosted glass: the stripes and discs behind them are softly blurred under a milky white frost" loading="lazy">
+                <figcaption>Frosted Glass: set the blur, and how strong the frost is</figcaption>
+            </figure>
+        </div>
+    </section>
+
+    <section>
+        <div class="divider"><span>Textured glass</span></div>
+        <div class="shots three">
+            <figure>
+                <img src="images/reeded.png" alt="Reeded glass: fine vertical ribs split the stripes and discs behind the four shapes into slivers" loading="lazy">
+                <figcaption>Reeded</figcaption>
+            </figure>
+            <figure>
+                <img src="images/rain.png" alt="Rain on glass: small water droplets with bright highlights cover the four frosted shapes" loading="lazy">
+                <figcaption>Rain on Glass</figcaption>
+            </figure>
+            <figure>
+                <img src="images/crystal.png" alt="Crystal: the four shapes are cut into angular facets, each shifting the stripes behind it, with rainbow fringes" loading="lazy">
+                <figcaption>Crystal</figcaption>
+            </figure>
+        </div>
+    </section>
+
+    <section>
+        <div class="divider"><span>Tint it, or outline it</span></div>
+        <div class="shots">
+            <figure>
+                <img src="images/tinted.png" alt="The four shapes as lightly blurred glass tinted blue, darkening the warm colors behind them" loading="lazy">
+                <figcaption>Liquid Glass (Tinted)</figcaption>
+            </figure>
+            <figure>
+                <img src="images/stroke.png" alt="The four shapes as perfectly clear glass, each outlined by a thin white stroke that is brighter on the upper left, facing the light" loading="lazy">
+                <figcaption>Clear glass with the optional hairline stroke</figcaption>
+            </figure>
+        </div>
+    </section>
+
+    <section>
+        <div class="divider"><span>Features</span></div>
+        <ul class="features">
+            <li>Turn any shape layer into glass that refracts every layer below it</li>
+            <li>Liquid Glass, with highlights where rounded corners catch the light</li>
+            <li>Frosted glass: control the blur and the strength and color of the frost</li>
+            <li>Textured glass: 9 built-in reliefs (Reeded, Fluted, Waves, Ripple, Hammered, Rain, Glass Blocks, Facets, Noise) or any layer of your own</li>
+            <li>Start from 13 built-in presets</li>
+            <li>Tint, saturation, a soft shadow, and an optional hairline stroke</li>
+            <li>Move, scale, rotate, and animate the shape's path freely</li>
+            <li>8, 16 and 32-bit color, multithreaded</li>
+        </ul>
+    </section>
+
+    <section>
+        <div class="divider"><span>Setup</span></div>
+        <ol>
+            <li><strong>Install</strong> — run the installer. It needs an
+                administrator password, since After Effects plug-ins live in
+                a shared folder.</li>
+            <li>Start (or restart) After Effects.</li>
+            <li>Select a shape layer and apply
+                <em>Effect&nbsp;→&nbsp;RefractLab&nbsp;→&nbsp;RefractLab</em>.
+                Leave <strong>Background Layer</strong> at None: the shape
+                turns to glass over everything below it.</li>
+            <li>Pick a look from the <strong>Preset</strong> menu at the top
+                of the effect, then fine-tune the Bevel, Frost, Texture and
+                Highlights settings.</li>
+            <li>Want just one layer behind the glass? Set it as
+                <strong>Background Layer</strong>.</li>
+        </ol>
+        <h3>Need the exact composite below?</h3>
+        <p class="fine">On its own, RefractLab stacks the layers below
+        with their opacity and the Normal, Add, Screen and Multiply blend
+        modes; track mattes, 3D depth and adjustment layers below it are
+        left out. To refract exactly what After Effects draws, put an
+        adjustment layer above everything, apply RefractLab to it, and set
+        <strong>Shape Layer</strong> to a (hidden) shape layer.</p>
+        <h3>The installer isn't signed yet</h3>
+        <p class="fine">If macOS says the installer can't be opened,
+        right-click it and choose <em>Open</em>. On macOS 15 and later,
+        open <em>System Settings → Privacy &amp; Security</em> instead and
+        click <em>Open Anyway</em>.</p>
+        <p class="fine">The plug-in installs to
+        <code>/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore/RefractLab</code>.
+        To uninstall, delete that folder.</p>
+    </section>
+
+    <section>
+        <div class="divider"><span>Requirements</span></div>
+        <p class="fine">After Effects on macOS 12 or later, Apple Silicon
+        or Intel. Developed and tested on After Effects 2026; earlier
+        versions haven't been tested. Everything runs locally: no accounts
+        and no network calls.</p>
+    </section>
+
+    <footer>
+        RefractLab <span id="version">v0.1.6</span> ·
+        <a href="https://github.com/tlatvys-ac/refractlab-app/releases">release notes</a> ·
+        made by Thomas Latvys ·
+        see also <a href="https://tlatvys-ac.github.io/fluidlab-app/">FluidLab</a>,
+        <a href="https://tlatvys-ac.github.io/anchor-buddy-app/">Anchor Buddy</a>,
+        <a href="https://tlatvys-ac.github.io/transporter-app/">Transporter</a>,
+        <a href="https://tlatvys-ac.github.io/aedoom-app/">AEDoom</a>,
+        and <a href="https://tlatvys-ac.github.io/motionref-app/">MotionRef</a>
+    </footer>
+
+    <div class="lightbox" id="lightbox" role="dialog" aria-label="Render preview" aria-hidden="true">
+        <img id="lightbox-img" src="" alt="">
+    </div>
+
+    <script>
+    // Click a render to preview it at full size; click anywhere
+    // (or press Escape) to close.
+    (() => {
+        const box = document.getElementById("lightbox");
+        const big = document.getElementById("lightbox-img");
+        document.querySelectorAll(".shots img").forEach((img) => {
+            img.addEventListener("click", () => {
+                big.src = img.src;
+                big.alt = img.alt;
+                box.classList.add("open");
+                box.setAttribute("aria-hidden", "false");
+            });
+        });
+        const close = () => {
+            box.classList.remove("open");
+            box.setAttribute("aria-hidden", "true");
+        };
+        box.addEventListener("click", close);
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") close();
+        });
+    })();
+    </script>
+
+    <script>
+    // Keep the version and download link pointing at the latest release
+    // automatically; the hardcoded values above are the fallback if this
+    // fetch fails.
+    fetch("https://api.github.com/repos/tlatvys-ac/refractlab-app/releases/latest")
+        .then((r) => r.json())
+        .then((rel) => {
+            const v = (rel.tag_name || "").replace(/^v/, "");
+            if (v) document.getElementById("version").textContent = "v" + v;
+            const asset = (rel.assets || []).find((a) => /mac\.pkg$/.test(a.name));
+            if (asset) document.getElementById("dl-mac").href = asset.browser_download_url;
+        })
+        .catch(() => {});
+    </script>
+</div>
+</body>
+</html>
