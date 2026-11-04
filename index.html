@@ -9,354 +9,817 @@
 <link rel="icon" type="image/png" sizes="64x64" href="images/favicon.png">
 <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
 <meta name="description" content="RefractLab is a free After Effects effect that turns shape layers into glass: Liquid Glass, frosted glass, and textured glass that refracts every layer below it.">
+<meta name="theme-color" content="#1E2024">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://tlatvys-ac.github.io/refractlab-app/">
+<meta property="og:title" content="RefractLab — glass for After Effects">
+<meta property="og:description" content="A free After Effects effect that turns shape layers into Liquid Glass, frosted glass, and textured glass.">
+<meta property="og:image" content="https://tlatvys-ac.github.io/refractlab-app/images/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Shapes of clear Liquid Glass bending a colorful painted mural behind them">
+<meta name="twitter:card" content="summary_large_image">
 <style>
     :root {
         --bg: #1E2024;
         --surface: #2A2D33;
-        --border: #4A4D54;
+        --border: #3E424A;
         --text: #DDD;
         --text-strong: #FFF;
-        --muted: #8A8F98;
+        --muted: #9BA1AA;
         --accent: #4DA6FF;
-        --gold: #FFC53D;
+        --accent-hover: #74BAFF;
+        --on-accent: #0B1A2B;
+        /* the logo's bars */
+        --pink: #FF5C8A;
+        --orange: #FFB23D;
+        --yellow: #FFE066;
+        --green: #3DDBB0;
+        --blue: #4DA6FF;
+        --rainbow: linear-gradient(90deg, var(--pink), var(--orange), var(--yellow), var(--green), var(--blue));
     }
     * { box-sizing: border-box; }
+    html { overflow-x: clip; }
     body {
         margin: 0;
         background: var(--bg);
         color: var(--text);
         font-family: -apple-system, "SF Pro Text", "Helvetica Neue", "Segoe UI", sans-serif;
+        font-size: 16px;
         line-height: 1.6;
         -webkit-font-smoothing: antialiased;
     }
     .wrap {
         max-width: 660px;
         margin: 0 auto;
-        padding: 56px 24px 80px;
+        padding: 64px 24px 48px;
     }
+    a { color: var(--accent); text-underline-offset: 2px; }
+    a:hover { color: var(--accent-hover); }
+    :focus-visible {
+        outline: 2px solid var(--text-strong);
+        outline-offset: 3px;
+        border-radius: 4px;
+    }
+    h1, h2, h3, .tagline, figcaption { text-wrap: balance; }
+
+    /* ---------------------------------------------------------- hero */
     .hero {
         display: flex;
         flex-direction: column;
         align-items: center;
         text-align: center;
-        gap: 14px;
-        margin-bottom: 44px;
     }
-    .mark { width: 120px; height: 120px; }
+    .mark { width: 112px; height: 112px; }
     h1 {
-        margin: 0;
-        font-size: 22px;
+        margin: 18px -0.3em 0 0;   /* cancel the trailing letter-spacing so it centers */
+        font-size: 28px;
         font-weight: 700;
         letter-spacing: 0.3em;
+        line-height: 1.2;
         color: var(--text-strong);
     }
-    .tagline { margin: 0; color: var(--muted); font-size: 15px; max-width: 460px; }
-
-    .buttons {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        justify-content: center;
-        margin-top: 10px;
+    .tagline {
+        margin: 12px 0 0;
+        color: #B4B9C1;
+        font-size: 18px;
+        max-width: 460px;
     }
     .btn {
         display: inline-block;
-        background: var(--surface);
-        border: 1px solid var(--accent);
-        border-radius: 6px;
-        color: var(--text-strong);
-        font-size: 14px;
+        margin-top: 28px;
+        background: var(--accent);
+        border-radius: 8px;
+        color: var(--on-accent);
+        font-size: 16px;
         font-weight: 700;
-        padding: 10px 22px;
+        line-height: 1.4;
+        padding: 12px 32px;
         text-decoration: none;
-        transition: border-color 120ms, background-color 120ms;
+        box-shadow: 0 6px 24px rgba(77, 166, 255, 0.25);
+        transition: background-color 120ms, box-shadow 120ms, transform 120ms;
         white-space: nowrap;
     }
-    .btn:hover { border-color: #FFF; }
-    .btn:active { background: rgba(77, 166, 255, 0.15); }
-    .btn small { display: block; font-weight: 500; font-size: 11px; color: var(--muted); }
-    .soon { margin: 2px 0 0; color: var(--muted); font-size: 12px; }
+    .btn:hover {
+        background: var(--accent-hover);
+        color: var(--on-accent);
+        box-shadow: 0 8px 32px rgba(77, 166, 255, 0.4);
+        transform: translateY(-1px);
+    }
+    .btn:active { transform: none; box-shadow: 0 4px 16px rgba(77, 166, 255, 0.25); }
+    .btn small {
+        display: block;
+        font-weight: 500;
+        font-size: 12px;
+        color: rgba(11, 26, 43, 0.72);
+    }
+    .hero-notes {
+        margin: 16px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.7;
+    }
 
-    section { margin-top: 40px; }
-    .divider {
+    /* ------------------------------------------------------ sections */
+    section { margin-top: 72px; }
+    h2.divider {
         display: flex;
         align-items: center;
-        gap: 10px;
-        margin-bottom: 14px;
+        gap: 12px;
+        margin: 0 0 24px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--muted);
     }
-    .divider::before, .divider::after {
+    h2.divider::before, h2.divider::after {
         content: "";
         flex: 1;
         height: 1px;
         background: var(--border);
     }
-    .divider span {
-        font-size: 11px;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        color: var(--muted);
-    }
     h3 {
-        margin: 18px 0 6px;
-        font-size: 13px;
+        margin: 32px 0 8px;
+        font-size: 17px;
         font-weight: 700;
+        line-height: 1.4;
         color: var(--text-strong);
     }
-    ol { margin: 0; padding-left: 22px; }
-    li { margin-bottom: 10px; }
-    li::marker { color: var(--accent); font-weight: 700; }
-    a { color: var(--accent); }
-    .fine { color: var(--muted); font-size: 12px; }
-    code {
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: 4px;
-        padding: 1px 6px;
-        font-size: 12px;
-    }
-    .features { margin: 0; padding-left: 22px; }
-    .features li { margin-bottom: 8px; font-size: 18px; font-weight: 600; color: var(--text-strong); }
+    p { margin: 0 0 12px; }
+    .lead { font-size: 17px; }
+    .fine { color: var(--muted); font-size: 14px; }
+    strong { color: var(--text-strong); }
 
-    /* Renders break out of the text column, like the other pages. */
-    .shots {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 16px;
+    /* ------------------------------------------------------- gallery */
+    /* Renders break out of the text column. */
+    .gallery {
         width: min(1080px, calc(100vw - 48px));
         margin-left: 50%;
         transform: translateX(-50%);
     }
-    .shots.three { grid-template-columns: repeat(3, 1fr); }
-    .shots figure { margin: 0; }
-    .shots img {
-        display: block;
-        width: 100%;
-        height: auto;
-        border-radius: 8px;
-        border: 1px solid var(--border);
-        cursor: zoom-in;
-        transition: border-color 120ms;
-    }
-    .shots img:hover { border-color: var(--accent); }
-    .shots figcaption {
-        margin-top: 6px;
-        font-size: 11px;
+    .gallery h3 {
+        margin: 40px 0 14px;
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
         color: var(--muted);
         text-align: center;
     }
+    .gallery h3:first-child { margin-top: 0; }
+    .shots {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+    .shots.three { grid-template-columns: repeat(3, 1fr); }
+    .shots figure { margin: 0; }
+    .shot {
+        display: block;
+        width: 100%;
+        padding: 0;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: var(--surface);
+        overflow: hidden;
+        cursor: zoom-in;
+        transition: border-color 120ms;
+    }
+    .shot:hover { border-color: var(--accent); }
+    .shot:focus-visible { border-radius: 10px; }
+    .shot img {
+        display: block;
+        width: 100%;
+        height: auto;
+    }
+    .shots figcaption {
+        margin-top: 8px;
+        font-size: 13px;
+        color: var(--muted);
+        text-align: center;
+    }
+    .shots figcaption strong { font-weight: 600; }
+
+    /* ------------------------------------------------------ features */
+    .features {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+    .features li {
+        padding: 16px 18px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        font-size: 15px;
+        line-height: 1.5;
+    }
+    .features li strong {
+        display: block;
+        margin-bottom: 2px;
+        font-size: 16px;
+    }
+
+    /* --------------------------------------------------------- setup */
+    .steps {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        counter-reset: step;
+    }
+    .steps li {
+        position: relative;
+        margin-bottom: 16px;
+        padding-left: 44px;
+        counter-increment: step;
+    }
+    .steps li::before {
+        content: counter(step);
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: var(--c);
+        color: var(--on-accent);
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 28px;
+        text-align: center;
+    }
+    .steps li:nth-child(1) { --c: var(--pink); }
+    .steps li:nth-child(2) { --c: var(--orange); }
+    .steps li:nth-child(3) { --c: var(--yellow); }
+    .steps li:nth-child(4) { --c: var(--green); }
+    .steps li:nth-child(5) { --c: var(--blue); }
+
+    .callout {
+        margin: 28px 0 0;
+        padding: 16px 20px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--yellow);
+        border-radius: 8px;
+        scroll-margin-top: 24px;
+    }
+    .callout h3 { margin: 0 0 6px; font-size: 16px; }
+    .callout p { margin: 0; font-size: 15px; }
+
+    details {
+        margin-top: 16px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+    }
+    summary {
+        padding: 14px 20px;
+        font-weight: 600;
+        color: var(--text-strong);
+        cursor: pointer;
+        list-style: none;
+    }
+    summary::-webkit-details-marker { display: none; }
+    summary::before {
+        content: "";
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        margin: 0 12px 2px 0;
+        border-right: 2px solid var(--muted);
+        border-bottom: 2px solid var(--muted);
+        transform: rotate(-45deg);
+        transition: transform 120ms;
+    }
+    details[open] summary::before { transform: rotate(45deg); }
+    .details-body { padding: 0 20px 18px; }
+    .details-body h3 { margin: 12px 0 6px; font-size: 16px; }
+    .details-body h3 ~ h3 { margin-top: 24px; }
+
+    .path {
+        display: flex;
+        align-items: stretch;
+        margin: 8px 0 12px;
+        background: #17191C;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+    }
+    .path code {
+        flex: 1;
+        min-width: 0;
+        padding: 9px 12px;
+        overflow-x: auto;
+        white-space: nowrap;
+        font: 13px/1.5 ui-monospace, "SF Mono", Menlo, monospace;
+        color: var(--text);
+    }
+    .copy {
+        flex: none;
+        padding: 0 14px;
+        border: 0;
+        border-left: 1px solid var(--border);
+        border-radius: 0 6px 6px 0;
+        background: transparent;
+        color: var(--accent);
+        font-family: inherit;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+    .copy:hover { background: var(--surface); }
+
+    /* ------------------------------------------------------ lightbox */
     .lightbox {
         position: fixed;
         inset: 0;
-        display: none;
+        display: flex;
         align-items: center;
         justify-content: center;
-        background: rgba(10, 11, 13, 0.9);
+        background: rgba(10, 11, 13, 0.92);
         z-index: 100;
         cursor: zoom-out;
         padding: 24px;
     }
-    .lightbox.open { display: flex; }
+    .lightbox[hidden] { display: none; }
     .lightbox img {
         max-width: 96vw;
         max-height: 92vh;
         width: auto;
         height: auto;
-        border-radius: 8px;
+        border-radius: 10px;
         border: 1px solid var(--border);
         box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
     }
+    .lightbox-close {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        width: 40px;
+        height: 40px;
+        border: 1px solid var(--border);
+        border-radius: 50%;
+        background: var(--surface);
+        color: var(--text-strong);
+        font-size: 22px;
+        line-height: 1;
+        cursor: pointer;
+    }
+
+    /* ---------------------------------------------------- hero video */
+    /* Breaks out of the text column, like the gallery. */
+    .hero-media {
+        position: relative;
+        flex: none;
+        width: min(756px, calc(100vw - 48px));
+        margin-top: 44px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+        background: #0E0F12;
+        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.45);
+    }
+    .hero-media video {
+        display: block;
+        width: 100%;
+        height: auto;
+    }
+    .video-toggle {
+        position: absolute;
+        right: 14px;
+        bottom: 14px;
+        display: grid;
+        place-items: center;
+        width: 36px;
+        height: 36px;
+        padding: 0;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        background: rgba(20, 22, 26, 0.55);
+        -webkit-backdrop-filter: blur(8px);
+        backdrop-filter: blur(8px);
+        color: #FFF;
+        cursor: pointer;
+        opacity: 0.75;
+        transition: opacity 120ms;
+    }
+    .video-toggle:hover, .video-toggle:focus-visible { opacity: 1; }
+    .video-toggle:focus-visible { border-radius: 50%; }
+    .video-toggle svg { width: 14px; height: 14px; fill: currentColor; }
+    .video-toggle .icon-play, .video-toggle.paused .icon-pause { display: none; }
+    .video-toggle.paused .icon-play { display: block; }
+
+    /* --------------------------------------------- before/after slider */
+    .compare {
+        position: relative;
+        display: grid;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        overflow: hidden;
+        cursor: ew-resize;
+        touch-action: pan-y;   /* vertical swipes still scroll the page */
+        -webkit-user-select: none;
+        user-select: none;
+    }
+    .compare picture { grid-area: 1 / 1; }
+    .compare img {
+        display: block;
+        width: 100%;
+        height: auto;
+        pointer-events: none;
+    }
+    .compare-after { clip-path: inset(0 0 0 var(--pos)); }
+    .compare-handle {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: var(--pos);
+        width: 2px;
+        margin-left: -1px;
+        background: #FFF;
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.35);
+        pointer-events: none;
+    }
+    .compare-handle::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 36px;
+        height: 36px;
+        transform: translate(-50%, -50%);
+        border: 2px solid #FFF;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.22) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 6l-4 4 4 4M13 6l4 4-4 4'/%3E%3C/svg%3E") center / 18px no-repeat;
+        -webkit-backdrop-filter: blur(6px);
+        backdrop-filter: blur(6px);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+    .compare-tag {
+        position: absolute;
+        top: 10px;
+        padding: 3px 9px;
+        border-radius: 999px;
+        background: rgba(14, 15, 18, 0.6);
+        -webkit-backdrop-filter: blur(6px);
+        backdrop-filter: blur(6px);
+        color: #FFF;
+        font-size: 12px;
+        font-weight: 600;
+        pointer-events: none;
+    }
+    .compare-tag-before { left: 10px; }
+    .compare-tag-after { right: 10px; }
+    .compare-range {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        opacity: 0;
+        pointer-events: none;   /* the box handles the pointer; this is for the keyboard */
+    }
+    .compare:has(.compare-range:focus-visible) {
+        outline: 2px solid var(--text-strong);
+        outline-offset: 3px;
+    }
+
+    /* -------------------------------------------------------- footer */
     footer {
-        margin-top: 56px;
+        margin-top: 88px;
+        padding-top: 24px;
+        border-top: 1px solid var(--border);
         text-align: center;
         color: var(--muted);
-        font-size: 12px;
+        font-size: 13px;
     }
+    footer p { margin: 0 0 6px; }
+    footer a { text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    .sep { margin: 0 6px; opacity: 0.5; }
+
     @media (max-width: 620px) {
-        .shots, .shots.three { grid-template-columns: 1fr; }
+        .wrap { padding-top: 48px; }
+        .shots, .shots.three, .features { grid-template-columns: 1fr; }
+        section { margin-top: 56px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        * { transition: none !important; }
     }
 </style>
 </head>
 <body>
 <div class="wrap">
-    <div class="hero">
-        <img class="mark" src="images/logo.svg" alt="">
+    <header class="hero">
+        <img class="mark" src="images/logo.svg" alt="" width="112" height="112">
         <h1>REFRACTLAB</h1>
         <p class="tagline">Turn your shape layers into glass inside After Effects</p>
-        <div class="buttons">
-            <a class="btn" id="dl-mac" href="https://github.com/tlatvys-ac/refractlab-app/releases/latest/download/RefractLab-0.1.6-mac.pkg">
-                Download for macOS
-                <small>Installer (.pkg) · Apple Silicon &amp; Intel · free</small>
-            </a>
+        <a class="btn" id="dl-mac" href="https://github.com/tlatvys-ac/refractlab-app/releases/latest/download/RefractLab-0.1.6-mac.pkg">
+            Download for macOS
+            <small>Installer (.pkg) · Apple Silicon &amp; Intel · free</small>
+        </a>
+        <p class="hero-notes">
+            Not signed yet: macOS will ask you to approve the installer.
+            <a href="#unsigned">How to open it</a><br>
+            macOS only for now
+        </p>
+        <div class="hero-media">
+            <video id="hero-video" width="1920" height="1080" autoplay muted loop playsinline preload="auto" poster="images/hero-poster.jpg" aria-label="A pill and a circle of Liquid Glass glide over a starry night sky above a mountain ridge, bending the stars and peaks behind them">
+                <source src="images/hero.mp4" type="video/mp4">
+            </video>
+            <button class="video-toggle" id="video-toggle" type="button" aria-label="Pause video">
+                <svg class="icon-pause" viewBox="0 0 16 16" aria-hidden="true"><rect x="3.5" y="2.5" width="3" height="11" rx="1"/><rect x="9.5" y="2.5" width="3" height="11" rx="1"/></svg>
+                <svg class="icon-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 2.8v10.4a.8.8 0 0 0 1.2.7l8.4-5.2a.8.8 0 0 0 0-1.4L5.7 2.1a.8.8 0 0 0-1.2.7z"/></svg>
+            </button>
         </div>
-        <p class="soon">Windows isn't available yet.</p>
-    </div>
+    </header>
 
+    <main>
     <section>
-        <div class="divider"><span>About</span></div>
-        <p>RefractLab turns a shape layer into a pane of glass. Apply the
-        RefractLab effect to a shape layer and everything below it bends
-        through the glass: no precomps, no background layer to set up. Go
-        for Apple-style Liquid Glass, frosted glass, or textured glass,
-        and animate the shape any way you like.</p>
+        <h2 class="divider">About</h2>
+        <p class="lead">RefractLab turns a shape layer into a pane of glass.
+        Apply the RefractLab effect to a shape layer and everything below
+        it bends through the glass. Go for Apple-style Liquid Glass,
+        frosted glass, or textured glass, and animate the shape any way
+        you like.</p>
     </section>
 
     <section>
-        <div class="divider"><span>What it looks like</span></div>
-        <div class="shots">
-            <figure>
-                <img src="images/liquid.png" alt="A pill, a rounded square, a circle and a tall card of clear glass over orange and violet gradients with diagonal stripes and bold discs; the stripes and discs bend at the glass's rounded edges" loading="lazy">
-                <figcaption>Liquid Glass: rounded edges that lens what's behind them</figcaption>
-            </figure>
-            <figure>
-                <img src="images/frosted.png" alt="The same four shapes as frosted glass: the stripes and discs behind them are softly blurred under a milky white frost" loading="lazy">
-                <figcaption>Frosted Glass: set the blur, and how strong the frost is</figcaption>
-            </figure>
+        <h2 class="divider">Looks</h2>
+        <div class="gallery">
+            <h3>Liquid and frosted</h3>
+            <div class="shots">
+                <figure>
+                    <div class="compare" id="compare" style="--pos: 50%">
+                        <picture>
+                            <source type="image/avif" srcset="images/liquid-before.avif">
+                            <img src="images/liquid-before.jpg" width="1280" height="720" decoding="async" alt="The plain background: a painted mural of red, teal, blue, yellow, black and white abstract shapes on a textured wall">
+                        </picture>
+                        <picture class="compare-after">
+                            <source type="image/avif" srcset="images/liquid.avif">
+                            <img src="images/liquid.jpg" width="1280" height="720" decoding="async" alt="A pill, a rounded square, a circle and a tall card of clear glass over the same mural; the painted shapes bend and magnify at the glass's rounded edges">
+                        </picture>
+                        <span class="compare-tag compare-tag-before" aria-hidden="true">Without</span>
+                        <span class="compare-tag compare-tag-after" aria-hidden="true">With RefractLab</span>
+                        <span class="compare-handle" aria-hidden="true"></span>
+                        <input class="compare-range" type="range" min="0" max="100" value="50" aria-label="Compare the background without and with RefractLab glass">
+                    </div>
+                    <figcaption><strong>Liquid Glass</strong> — drag to compare with the plain background</figcaption>
+                </figure>
+                <figure>
+                    <button class="shot" type="button" aria-haspopup="dialog">
+                        <picture>
+                            <source type="image/avif" srcset="images/frosted.avif">
+                            <img src="images/frosted.jpg" width="1280" height="720" decoding="async" alt="The same four shapes as frosted glass over glowing orange and red swirls, softly blurred under a milky white frost">
+                        </picture>
+                    </button>
+                    <figcaption><strong>Frosted Glass</strong> — set the blur, and how strong the frost is</figcaption>
+                </figure>
+            </div>
+
+            <h3>Textured</h3>
+            <div class="shots three">
+                <figure>
+                    <button class="shot" type="button" aria-haspopup="dialog" data-full="images/reeded">
+                        <picture>
+                            <source type="image/avif" srcset="images/reeded-crop.avif">
+                            <img src="images/reeded-crop.jpg" width="560" height="420" loading="lazy" decoding="async" alt="Close-up of reeded glass over flowing blue waves: fine vertical ribs break the edge of a wave into a sawtooth">
+                        </picture>
+                    </button>
+                    <figcaption><strong>Reeded</strong> — fine vertical ribs</figcaption>
+                </figure>
+                <figure>
+                    <button class="shot" type="button" aria-haspopup="dialog" data-full="images/rain">
+                        <picture>
+                            <source type="image/avif" srcset="images/rain-crop.avif">
+                            <img src="images/rain-crop.jpg" width="560" height="420" loading="lazy" decoding="async" alt="Close-up of rain on glass over indigo and lilac curves: small droplets with bright highlights cover a frosted rounded square">
+                        </picture>
+                    </button>
+                    <figcaption><strong>Rain on Glass</strong> — droplets that catch the light</figcaption>
+                </figure>
+                <figure>
+                    <button class="shot" type="button" aria-haspopup="dialog" data-full="images/crystal">
+                        <picture>
+                            <source type="image/avif" srcset="images/crystal-crop.avif">
+                            <img src="images/crystal-crop.jpg" width="560" height="420" loading="lazy" decoding="async" alt="Close-up of crystal glass over black wavy ridges: a rounded square cut into angular facets, each shifting the ridges behind it, with rainbow fringes">
+                        </picture>
+                    </button>
+                    <figcaption><strong>Crystal</strong> — angular facets with rainbow fringes</figcaption>
+                </figure>
+            </div>
+
+            <h3>Tinted and outlined</h3>
+            <div class="shots">
+                <figure>
+                    <button class="shot" type="button" aria-haspopup="dialog">
+                        <picture>
+                            <source type="image/avif" srcset="images/tinted.avif">
+                            <img src="images/tinted.jpg" width="1280" height="720" loading="lazy" decoding="async" alt="The four shapes as lightly blurred, blue-tinted glass over a pink and purple sphere rising behind violet hills">
+                        </picture>
+                    </button>
+                    <figcaption><strong>Tinted</strong> — Liquid Glass with a blue tint</figcaption>
+                </figure>
+                <figure>
+                    <button class="shot" type="button" aria-haspopup="dialog">
+                        <picture>
+                            <source type="image/avif" srcset="images/stroke.avif">
+                            <img src="images/stroke.jpg" width="1280" height="720" loading="lazy" decoding="async" alt="The four shapes as perfectly clear glass over flowing blue waves, each outlined by a thin white stroke that is brighter on the upper left, facing the light">
+                        </picture>
+                    </button>
+                    <figcaption><strong>Hairline stroke</strong> — clear glass with an optional outline</figcaption>
+                </figure>
+            </div>
         </div>
     </section>
 
     <section>
-        <div class="divider"><span>Textured glass</span></div>
-        <div class="shots three">
-            <figure>
-                <img src="images/reeded.png" alt="Reeded glass: fine vertical ribs split the stripes and discs behind the four shapes into slivers" loading="lazy">
-                <figcaption>Reeded</figcaption>
-            </figure>
-            <figure>
-                <img src="images/rain.png" alt="Rain on glass: small water droplets with bright highlights cover the four frosted shapes" loading="lazy">
-                <figcaption>Rain on Glass</figcaption>
-            </figure>
-            <figure>
-                <img src="images/crystal.png" alt="Crystal: the four shapes are cut into angular facets, each shifting the stripes behind it, with rainbow fringes" loading="lazy">
-                <figcaption>Crystal</figcaption>
-            </figure>
-        </div>
-    </section>
-
-    <section>
-        <div class="divider"><span>Tint it, or outline it</span></div>
-        <div class="shots">
-            <figure>
-                <img src="images/tinted.png" alt="The four shapes as lightly blurred glass tinted blue, darkening the warm colors behind them" loading="lazy">
-                <figcaption>Liquid Glass (Tinted)</figcaption>
-            </figure>
-            <figure>
-                <img src="images/stroke.png" alt="The four shapes as perfectly clear glass, each outlined by a thin white stroke that is brighter on the upper left, facing the light" loading="lazy">
-                <figcaption>Clear glass with the optional hairline stroke</figcaption>
-            </figure>
-        </div>
-    </section>
-
-    <section>
-        <div class="divider"><span>Features</span></div>
+        <h2 class="divider">Features</h2>
         <ul class="features">
-            <li>Turn any shape layer into glass that refracts every layer below it</li>
-            <li>Liquid Glass, with highlights where rounded corners catch the light</li>
-            <li>Frosted glass: control the blur and the strength and color of the frost</li>
-            <li>Textured glass: 9 built-in reliefs (Reeded, Fluted, Waves, Ripple, Hammered, Rain, Glass Blocks, Facets, Noise) or any layer of your own</li>
-            <li>Start from 13 built-in presets</li>
-            <li>Tint, saturation, a soft shadow, and an optional hairline stroke</li>
-            <li>Move, scale, rotate, and animate the shape's path freely</li>
-            <li>8, 16 and 32-bit color, multithreaded</li>
+            <li><strong>Refracts every layer below</strong>Turn any shape layer into glass that bends whatever is underneath it</li>
+            <li><strong>Liquid Glass</strong>Highlights where rounded corners catch the light</li>
+            <li><strong>Frosted glass</strong>Control the blur, and the strength and color of the frost</li>
+            <li><strong>Textured glass</strong>9 built-in reliefs (Reeded, Fluted, Waves, Ripple, Hammered, Rain, Glass Blocks, Facets, Noise) or any layer of your own</li>
+            <li><strong>13 built-in presets</strong>Start from a finished look, then fine-tune it</li>
+            <li><strong>Finishing touches</strong>Tint, saturation, a soft shadow, and an optional hairline stroke</li>
+            <li><strong>Fully animatable</strong>Move, scale, rotate, and animate the shape's path freely</li>
+            <li><strong>Production-ready</strong>8, 16 and 32-bit color, multithreaded</li>
         </ul>
     </section>
 
     <section>
-        <div class="divider"><span>Setup</span></div>
-        <ol>
-            <li><strong>Install</strong> — run the installer. It needs an
+        <h2 class="divider">Setup</h2>
+        <ol class="steps">
+            <li><strong>Install.</strong> Run the installer. It needs an
                 administrator password, since After Effects plug-ins live in
                 a shared folder.</li>
-            <li>Start (or restart) After Effects.</li>
-            <li>Select a shape layer and apply
-                <em>Effect&nbsp;→&nbsp;RefractLab&nbsp;→&nbsp;RefractLab</em>.
+            <li><strong>Restart After Effects.</strong> Start it, or restart
+                it if it was already open.</li>
+            <li><strong>Apply the effect.</strong> Select a shape layer and
+                choose <em>Effect&nbsp;→&nbsp;RefractLab&nbsp;→&nbsp;RefractLab</em>.
                 Leave <strong>Background Layer</strong> at None: the shape
                 turns to glass over everything below it.</li>
-            <li>Pick a look from the <strong>Preset</strong> menu at the top
-                of the effect, then fine-tune the Bevel, Frost, Texture and
-                Highlights settings.</li>
-            <li>Want just one layer behind the glass? Set it as
+            <li><strong>Pick a look.</strong> Choose one from the
+                <strong>Preset</strong> menu at the top of the effect, then
+                fine-tune the Bevel, Frost, Texture and Highlights settings.</li>
+            <li><strong>Optional: refract just one layer.</strong> Set it as
                 <strong>Background Layer</strong>.</li>
         </ol>
-        <h3>Need the exact composite below?</h3>
-        <p class="fine">On its own, RefractLab stacks the layers below
-        with their opacity and the Normal, Add, Screen and Multiply blend
-        modes; track mattes, 3D depth and adjustment layers below it are
-        left out. To refract exactly what After Effects draws, put an
-        adjustment layer above everything, apply RefractLab to it, and set
-        <strong>Shape Layer</strong> to a (hidden) shape layer.</p>
-        <h3>The installer isn't signed yet</h3>
-        <p class="fine">If macOS says the installer can't be opened,
-        right-click it and choose <em>Open</em>. On macOS 15 and later,
-        open <em>System Settings → Privacy &amp; Security</em> instead and
-        click <em>Open Anyway</em>.</p>
-        <p class="fine">The plug-in installs to
-        <code>/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore/RefractLab</code>.
-        To uninstall, delete that folder.</p>
+
+        <div class="callout" id="unsigned">
+            <h3>If macOS won't open the installer</h3>
+            <p>The installer isn't signed yet. Right-click it and choose
+            <em>Open</em>. On macOS 15 and later, open <em>System
+            Settings → Privacy &amp; Security</em> instead and click
+            <em>Open Anyway</em>.</p>
+        </div>
+
+        <details>
+            <summary>Advanced and uninstalling</summary>
+            <div class="details-body">
+                <h3>Need the exact composite below?</h3>
+                <p class="fine">On its own, RefractLab stacks the layers below
+                with their opacity and the Normal, Add, Screen and Multiply blend
+                modes; track mattes, 3D depth and adjustment layers below it are
+                left out. To refract exactly what After Effects draws, put an
+                adjustment layer above everything, apply RefractLab to it, and set
+                <strong>Shape Layer</strong> to a (hidden) shape layer.</p>
+                <h3>Where it installs</h3>
+                <div class="path">
+                    <code id="install-path">/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore/RefractLab</code>
+                    <button class="copy" type="button" data-copy="install-path">Copy</button>
+                </div>
+                <p class="fine">To uninstall, delete that folder.</p>
+            </div>
+        </details>
     </section>
 
     <section>
-        <div class="divider"><span>Requirements</span></div>
+        <h2 class="divider">Requirements</h2>
         <p class="fine">After Effects on macOS 12 or later, Apple Silicon
         or Intel. Developed and tested on After Effects 2026; earlier
         versions haven't been tested. Everything runs locally: no accounts
         and no network calls.</p>
     </section>
+    </main>
 
     <footer>
-        RefractLab <span id="version">v0.1.6</span> ·
-        <a href="https://github.com/tlatvys-ac/refractlab-app/releases">release notes</a> ·
-        made by Thomas Latvys ·
-        see also <a href="https://tlatvys-ac.github.io/fluidlab-app/">FluidLab</a>,
-        <a href="https://tlatvys-ac.github.io/anchor-buddy-app/">Anchor Buddy</a>,
-        <a href="https://tlatvys-ac.github.io/transporter-app/">Transporter</a>,
-        <a href="https://tlatvys-ac.github.io/aedoom-app/">AEDoom</a>,
-        and <a href="https://tlatvys-ac.github.io/motionref-app/">MotionRef</a>
+        <p>RefractLab <span id="version">v0.1.6</span><span class="sep">·</span><a href="https://github.com/tlatvys-ac/refractlab-app/releases">Release notes</a><span class="sep">·</span>Made by Thomas Latvys</p>
+        <p>More tools:
+            <a href="https://tlatvys-ac.github.io/fluidlab-app/">FluidLab</a><span class="sep">·</span><a href="https://tlatvys-ac.github.io/anchor-buddy-app/">Anchor Buddy</a><span class="sep">·</span><a href="https://tlatvys-ac.github.io/transporter-app/">Transporter</a><span class="sep">·</span><a href="https://tlatvys-ac.github.io/aedoom-app/">AEDoom</a><span class="sep">·</span><a href="https://tlatvys-ac.github.io/motionref-app/">MotionRef</a>
+        </p>
     </footer>
-
-    <div class="lightbox" id="lightbox" role="dialog" aria-label="Render preview" aria-hidden="true">
-        <img id="lightbox-img" src="" alt="">
-    </div>
-
-    <script>
-    // Click a render to preview it at full size; click anywhere
-    // (or press Escape) to close.
-    (() => {
-        const box = document.getElementById("lightbox");
-        const big = document.getElementById("lightbox-img");
-        document.querySelectorAll(".shots img").forEach((img) => {
-            img.addEventListener("click", () => {
-                big.src = img.src;
-                big.alt = img.alt;
-                box.classList.add("open");
-                box.setAttribute("aria-hidden", "false");
-            });
-        });
-        const close = () => {
-            box.classList.remove("open");
-            box.setAttribute("aria-hidden", "true");
-        };
-        box.addEventListener("click", close);
-        document.addEventListener("keydown", (e) => {
-            if (e.key === "Escape") close();
-        });
-    })();
-    </script>
-
-    <script>
-    // Keep the version and download link pointing at the latest release
-    // automatically; the hardcoded values above are the fallback if this
-    // fetch fails.
-    fetch("https://api.github.com/repos/tlatvys-ac/refractlab-app/releases/latest")
-        .then((r) => r.json())
-        .then((rel) => {
-            const v = (rel.tag_name || "").replace(/^v/, "");
-            if (v) document.getElementById("version").textContent = "v" + v;
-            const asset = (rel.assets || []).find((a) => /mac\.pkg$/.test(a.name));
-            if (asset) document.getElementById("dl-mac").href = asset.browser_download_url;
-        })
-        .catch(() => {});
-    </script>
 </div>
+
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Render preview" hidden>
+    <img id="lightbox-img" src="" alt="">
+    <button class="lightbox-close" id="lightbox-close" type="button" aria-label="Close preview">×</button>
+</div>
+
+<script>
+// Click (or Enter/Space on) a render to preview it at full size; click
+// anywhere, press Escape, or use the close button to close. Focus moves
+// into the preview and back to the render that opened it.
+(() => {
+    const box = document.getElementById("lightbox");
+    const big = document.getElementById("lightbox-img");
+    const closeBtn = document.getElementById("lightbox-close");
+    let opener = null;
+    const open = (btn) => {
+        const img = btn.querySelector("img");
+        const src = img.currentSrc || img.src;
+        // Close-ups open the whole render, in whichever format the browser picked.
+        big.src = btn.dataset.full ? btn.dataset.full + src.slice(src.lastIndexOf(".")) : src;
+        big.alt = img.alt;
+        opener = btn;
+        box.hidden = false;
+        document.body.style.overflow = "hidden";
+        closeBtn.focus();
+    };
+    const close = () => {
+        if (box.hidden) return;
+        box.hidden = true;
+        document.body.style.overflow = "";
+        if (opener) opener.focus();
+    };
+    document.querySelectorAll(".shot").forEach((btn) => btn.addEventListener("click", () => open(btn)));
+    box.addEventListener("click", close);
+    document.addEventListener("keydown", (e) => {
+        if (box.hidden) return;
+        if (e.key === "Escape") close();
+        if (e.key === "Tab") { e.preventDefault(); closeBtn.focus(); }
+    });
+})();
+
+// Hero video: a pause/play button, and no autoplay for reduced motion.
+(() => {
+    const video = document.getElementById("hero-video");
+    const btn = document.getElementById("video-toggle");
+    const sync = () => {
+        btn.classList.toggle("paused", video.paused);
+        btn.setAttribute("aria-label", video.paused ? "Play video" : "Pause video");
+    };
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        video.removeAttribute("autoplay");
+        video.pause();
+    }
+    btn.addEventListener("click", () => (video.paused ? video.play() : video.pause()));
+    video.addEventListener("play", sync);
+    video.addEventListener("pause", sync);
+    sync();
+})();
+
+// Before/after slider: drag (or click) anywhere on it; arrow keys move it too.
+(() => {
+    const box = document.getElementById("compare");
+    const range = box.querySelector(".compare-range");
+    const set = (v) => {
+        v = Math.min(100, Math.max(0, v));
+        box.style.setProperty("--pos", v + "%");
+        range.value = Math.round(v);
+    };
+    const fromPointer = (e) => {
+        const r = box.getBoundingClientRect();
+        set(((e.clientX - r.left) / r.width) * 100);
+    };
+    let dragging = false;
+    box.addEventListener("pointerdown", (e) => {
+        dragging = true;
+        box.setPointerCapture(e.pointerId);
+        fromPointer(e);
+    });
+    box.addEventListener("pointermove", (e) => { if (dragging) fromPointer(e); });
+    const stop = () => { dragging = false; };
+    box.addEventListener("pointerup", stop);
+    box.addEventListener("pointercancel", stop);
+    range.addEventListener("input", () => set(Number(range.value)));
+})();
+
+// Copy the install path.
+document.querySelectorAll(".copy").forEach((btn) => {
+    btn.addEventListener("click", () => {
+        const text = document.getElementById(btn.dataset.copy).textContent;
+        const done = () => {
+            btn.textContent = "Copied";
+            setTimeout(() => { btn.textContent = "Copy"; }, 1500);
+        };
+        if (navigator.clipboard) navigator.clipboard.writeText(text).then(done, () => {});
+    });
+});
+
+// Keep the version and download link pointing at the latest release
+// automatically; the hardcoded values above are the fallback if this
+// fetch fails.
+fetch("https://api.github.com/repos/tlatvys-ac/refractlab-app/releases/latest")
+    .then((r) => r.json())
+    .then((rel) => {
+        const v = (rel.tag_name || "").replace(/^v/, "");
+        if (v) document.getElementById("version").textContent = "v" + v;
+        const asset = (rel.assets || []).find((a) => /mac\.pkg$/.test(a.name));
+        if (asset) document.getElementById("dl-mac").href = asset.browser_download_url;
+    })
+    .catch(() => {});
+</script>
 </body>
 </html>
