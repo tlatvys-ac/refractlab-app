@@ -85,9 +85,17 @@
         font-size: 18px;
         max-width: 460px;
     }
+    .buttons {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 28px;
+    }
     .btn {
         display: inline-block;
-        margin-top: 28px;
+        min-width: 296px;
+        text-align: center;
         background: var(--accent);
         border-radius: 8px;
         color: var(--on-accent);
@@ -107,6 +115,18 @@
         transform: translateY(-1px);
     }
     .btn:active { transform: none; box-shadow: 0 4px 16px rgba(77, 166, 255, 0.25); }
+    /* the other platform's button: outlined, so the visitor's own stands out */
+    .btn.btn-secondary {
+        background: transparent;
+        color: var(--text-strong);
+        box-shadow: inset 0 0 0 1px var(--accent);
+    }
+    .btn.btn-secondary:hover {
+        background: rgba(77, 166, 255, 0.12);
+        color: var(--text-strong);
+        box-shadow: inset 0 0 0 1px var(--accent-hover);
+    }
+    .btn.btn-secondary small { color: var(--muted); }
     .btn small {
         display: block;
         font-weight: 500;
@@ -268,7 +288,8 @@
         scroll-margin-top: 24px;
     }
     .callout h3 { margin: 0 0 6px; font-size: 16px; }
-    .callout p { margin: 0; font-size: 15px; }
+    .callout p { margin: 0 0 8px; font-size: 15px; }
+    .callout p:last-child { margin-bottom: 0; }
 
     details {
         margin-top: 16px;
@@ -516,14 +537,19 @@
         <img class="mark" src="images/logo.svg" alt="" width="112" height="112">
         <h1>REFRACTLAB</h1>
         <p class="tagline">Turn your shape layers into glass inside After Effects</p>
-        <a class="btn" id="dl-mac" href="https://github.com/tlatvys-ac/refractlab-app/releases/latest/download/RefractLab-0.1.6-mac.pkg">
-            Download for macOS
-            <small>Installer (.pkg) · Apple Silicon &amp; Intel · free</small>
-        </a>
+        <div class="buttons" id="buttons">
+            <a class="btn" id="dl-mac" href="https://github.com/tlatvys-ac/refractlab-app/releases/latest/download/RefractLab-0.1.7-mac.pkg">
+                Download for macOS
+                <small>Installer (.pkg) · Apple Silicon &amp; Intel · free</small>
+            </a>
+            <a class="btn btn-secondary" id="dl-win" href="https://github.com/tlatvys-ac/refractlab-app/releases/latest/download/RefractLab-0.1.7-win-setup.exe">
+                Download for Windows
+                <small>Installer (.exe) · 64-bit · free</small>
+            </a>
+        </div>
         <p class="hero-notes">
-            Not signed yet: macOS will ask you to approve the installer.
-            <a href="#unsigned">How to open it</a><br>
-            macOS only for now
+            Not signed yet: your system will ask you to approve the installer.
+            <a href="#unsigned">How to open it</a>
         </p>
         <div class="hero-media">
             <video id="hero-video" width="1920" height="1080" autoplay muted loop playsinline preload="auto" poster="images/hero-poster.jpg" aria-label="A pill and a circle of Liquid Glass glide over a starry night sky above a mountain ridge, bending the stars and peaks behind them">
@@ -651,9 +677,9 @@
     <section>
         <h2 class="divider">Setup</h2>
         <ol class="steps">
-            <li><strong>Install.</strong> Run the installer. It needs an
-                administrator password, since After Effects plug-ins live in
-                a shared folder.</li>
+            <li><strong>Install.</strong> Run the installer. It asks for
+                administrator permission, since After Effects plug-ins live
+                in a shared folder.</li>
             <li><strong>Restart After Effects.</strong> Start it, or restart
                 it if it was already open.</li>
             <li><strong>Apply the effect.</strong> Select a shape layer and
@@ -668,11 +694,14 @@
         </ol>
 
         <div class="callout" id="unsigned">
-            <h3>If macOS won't open the installer</h3>
-            <p>The installer isn't signed yet. Right-click it and choose
+            <h3>If the installer won't open</h3>
+            <p>The installers aren't signed yet.</p>
+            <p><strong>macOS:</strong> right-click the installer and choose
             <em>Open</em>. On macOS 15 and later, open <em>System
             Settings → Privacy &amp; Security</em> instead and click
             <em>Open Anyway</em>.</p>
+            <p><strong>Windows:</strong> if SmartScreen says it protected
+            your PC, click <em>More info</em>, then <em>Run anyway</em>.</p>
         </div>
 
         <details>
@@ -686,26 +715,34 @@
                 adjustment layer above everything, apply RefractLab to it, and set
                 <strong>Shape Layer</strong> to a (hidden) shape layer.</p>
                 <h3>Where it installs</h3>
+                <p class="fine">macOS: to uninstall, delete this folder.</p>
                 <div class="path">
-                    <code id="install-path">/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore/RefractLab</code>
-                    <button class="copy" type="button" data-copy="install-path">Copy</button>
+                    <code id="install-path-mac">/Library/Application Support/Adobe/Common/Plug-ins/7.0/MediaCore/RefractLab</code>
+                    <button class="copy" type="button" data-copy="install-path-mac">Copy</button>
                 </div>
-                <p class="fine">To uninstall, delete that folder.</p>
+                <p class="fine">Windows: to uninstall, use <em>Settings → Apps →
+                RefractLab for After Effects</em>, or run <em>Uninstall
+                RefractLab.exe</em> in this folder.</p>
+                <div class="path">
+                    <code id="install-path-win">C:\Program Files\Adobe\Common\Plug-ins\7.0\MediaCore\RefractLab</code>
+                    <button class="copy" type="button" data-copy="install-path-win">Copy</button>
+                </div>
             </div>
         </details>
     </section>
 
     <section>
         <h2 class="divider">Requirements</h2>
-        <p class="fine">After Effects on macOS 12 or later, Apple Silicon
-        or Intel. Developed and tested on After Effects 2026; earlier
+        <p class="fine">After Effects on macOS 12 or later (Apple Silicon
+        or Intel), or on 64-bit Windows 10 or 11. Developed and tested on
+        After Effects 2026; earlier
         versions haven't been tested. Everything runs locally: no accounts
         and no network calls.</p>
     </section>
     </main>
 
     <footer>
-        <p>RefractLab <span id="version">v0.1.6</span><span class="sep">·</span><a href="https://github.com/tlatvys-ac/refractlab-app/releases">Release notes</a><span class="sep">·</span>Made by Thomas Latvys</p>
+        <p>RefractLab <span id="version">v0.1.7</span><span class="sep">·</span><a href="https://github.com/tlatvys-ac/refractlab-app/releases">Release notes</a><span class="sep">·</span>Made by Thomas Latvys</p>
         <p>More tools:
             <a href="https://tlatvys-ac.github.io/fluidlab-app/">FluidLab</a><span class="sep">·</span><a href="https://tlatvys-ac.github.io/anchor-buddy-app/">Anchor Buddy</a><span class="sep">·</span><a href="https://tlatvys-ac.github.io/transporter-app/">Transporter</a><span class="sep">·</span><a href="https://tlatvys-ac.github.io/aedoom-app/">AEDoom</a><span class="sep">·</span><a href="https://tlatvys-ac.github.io/motionref-app/">MotionRef</a>
         </p>
@@ -808,7 +845,15 @@ document.querySelectorAll(".copy").forEach((btn) => {
     });
 });
 
-// Keep the version and download link pointing at the latest release
+// Windows visitors get the Windows button first and highlighted.
+if (/Windows/i.test(navigator.userAgent)) {
+    const mac = document.getElementById("dl-mac"), win = document.getElementById("dl-win");
+    win.classList.remove("btn-secondary");
+    mac.classList.add("btn-secondary");
+    win.parentNode.insertBefore(win, mac);
+}
+
+// Keep the version and download links pointing at the latest release
 // automatically; the hardcoded values above are the fallback if this
 // fetch fails.
 fetch("https://api.github.com/repos/tlatvys-ac/refractlab-app/releases/latest")
@@ -816,8 +861,11 @@ fetch("https://api.github.com/repos/tlatvys-ac/refractlab-app/releases/latest")
     .then((rel) => {
         const v = (rel.tag_name || "").replace(/^v/, "");
         if (v) document.getElementById("version").textContent = "v" + v;
-        const asset = (rel.assets || []).find((a) => /mac\.pkg$/.test(a.name));
-        if (asset) document.getElementById("dl-mac").href = asset.browser_download_url;
+        const assets = rel.assets || [];
+        const mac = assets.find((a) => /mac\.pkg$/.test(a.name));
+        const win = assets.find((a) => /win-setup\.exe$/.test(a.name));
+        if (mac) document.getElementById("dl-mac").href = mac.browser_download_url;
+        if (win) document.getElementById("dl-win").href = win.browser_download_url;
     })
     .catch(() => {});
 </script>
